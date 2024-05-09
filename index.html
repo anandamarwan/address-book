@@ -4,16 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Address Book</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
+    <h1>Address Book</h1>
     <div>
       <div id="header"></div>
-      <form
-        class="box-sizing: border-box h-10 w-35; border-color: black border-style : solid"
-      >
+      <form>
         <input type="text" placeholder="Search.." name="search" />
+        <button type="submit">Submit</button>
       </form>
 
       <div id="logosection"></div>
@@ -27,10 +25,45 @@
 
     <div id="content" class="flex flex-col">
       <h1>Contacts</h1>
-      <div id="name">Name</div>
-      <div id="email">Email</div>
-      <div id="phone">Phone Number</div>
-      <div id="job">Job title & Company</div>
+      <hr />
+      <div>
+        <form>
+          <label for="fullName">Full Name:</label>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="Ananda"
+            required
+          /><br /><br />
+          <label for="email">Email :</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            placeholder="ananda@gmail.com"
+            required
+          /><br /><br />
+          <label for="phone">Phone Number :</label>
+          <input
+            type="text"
+            id="phone"
+            name="phone"
+            placeholder="+62 813 7103 1191"
+            required
+          /><br /><br />
+          <label for="age">Age :</label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            placeholder="24"
+            required
+          /><br /><br />
+
+          <input type="button" onclick="formSubmit()" value="Submit!" />
+        </form>
+      </div>
     </div>
 
     <script src="index.js"></script>

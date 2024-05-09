@@ -19,5 +19,8 @@ const contacts = [
   },
 ];
 
-console.log(contacts);
-console.log(contacts[0]);
+for (let index = 0; index < contacts.length; index++) {
+  const contact = contacts[index];
+
+  console.log("${contact.id}. ${contact.fullName} (${contact.phone})");
+}
