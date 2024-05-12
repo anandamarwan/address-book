@@ -1,44 +1,81 @@
-const contacts = [
-  {
-    id: 1,
-    fullName: "Ananda Marwan",
-    age: 24,
-    phone: "+62 813 7103 1191",
-  },
-  {
-    id: 2,
-    fullName: "Salsabila",
-    age: 22,
-    phone: "+62 813 7103 1431",
-  },
-  {
-    id: 3,
-    fullName: "Amroati Soleha",
-    age: 40,
-    phone: "+62 813 7103 1531",
-  },
-];
+const searchInputElement = document.getElementById("search-input");
+const addContactFormElement = document.getElementById("add-contact-form");
+const contactsContainerElement = document.getElementById("contacts-container");
 
-function renderContacts() {
-  for (let index = 0; index < contacts.length; index++) {
-    const contact = contacts[index];
-    const ageCategory = contact.age > 30 ? "is old enough" : "is still young";
+function searchContacts(contacts, keyword) {
+  searchInputElement.value = keyword;
 
-    console.log(
-      `${contact.id}. ${contact.fullName} (${contact.phone}) ${ageCategory}`
-    );
-  }
-  console.log("");
+  const filteredContacts = contacts.filter((contact) =>
+    contact.fullName.toLowerCase().includes(keyword.toLowerCase())
+  );
+
+  return filteredContacts;
 }
 
-function addContact(fullName, age, phone) {
-  const lastId = contacts[contacts.length - 1].id;
+function renderContacts() {
+  const contacts = loadContacts();
 
-  contacts.push({ id: lastId + 1, fullName, age, phone });
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+  const keyword = params.get("q");
 
+  const contactsToRender = keyword
+    ? searchContacts(contacts, keyword)
+    : contacts;
+
+  const contactItemElements = contactsToRender.map(
+    (contact) => `<li>
+  <a href="/contact/?id=${contact.id}">
+    <h2>${contact.fullName}</h2>
+    <p>${contact.email}</p>
+    <p>${contact.phone}</p>
+  </a>
+  <div>
+    <button onclick="deleteContactById(${contact.id})">Delete</button>
+  </div>
+</li>
+`
+  );
+
+  const contactItems = contactItemElements.join("");
+  contactsContainerElement.innerHTML = contactItems;
+}
+
+function addContact(event) {
+  event.preventDefault();
+  const contactFormData = new FormData(addContactFormElement);
+
+  const contacts = loadContacts();
+
+  const newId = contacts.length ? contacts[contacts.length - 1].id + 1 : 1;
+
+  const newContact = {
+    id: newId,
+    fullName: contactFormData.get("fullName"),
+    email: contactFormData.get("email"),
+    phone: contactFormData.get("phone"),
+    age: Number(contactFormData.get("age")),
+  };
+
+  // Update by adding a new object in the array
+  const updatedContacts = [...contacts, newContact];
+  saveContacts(updatedContacts);
+
+  addContactFormElement.reset();
   renderContacts();
 }
 
-renderContacts();
-addContact("Mark", 40, "+123");
-addContact("Bill", 60, "+1456");
+function deleteContactById(id) {
+  const contacts = loadContacts();
+
+  const updatedContacts = contacts.filter(
+    (contact) => contact.id !== Number(id)
+  );
+
+  saveContacts(updatedContacts);
+  renderContacts();
+}
+
+addContactFormElement.addEventListener("submit", addContact);
+
+window.addEventListener("load", renderContacts);
