@@ -29,6 +29,7 @@ function renderContacts() {
     <h2>${contact.fullName}</h2>
     <p>${contact.email}</p>
     <p>${contact.phone}</p>
+    <p>${contact.age}</p>
   </a>
   <div>
     <button onclick="deleteContactById(${contact.id})">Delete</button>
