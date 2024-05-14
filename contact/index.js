@@ -1,13 +1,21 @@
-const searchParams = new URLSearchParams(window.location.search);
-console.log(searchParams);
+// Retrieve the array from local storage
+var storedArray = localStorage.getItem("address-book");
 
-const searchParamId = searchParams.get("id");
+// Check if the array exists in local storage
+if (storedArray) {
+  // Parse the stored JSON string into an array of objects
+  var parsedArray = JSON.parse(storedArray);
 
-console.log(searchParamId);
+  // Now you can use the parsedArray
+  console.log(parsedArray);
 
-const id = Number(searchParamId);
-console.log(id);
-
-const getFullName = localStorage.getItem("address-book");
-
-console.log(getFullName);
+  // Accessing individual objects in the array
+  parsedArray.forEach(function (obj) {
+    console.log("Full Name " + ":", obj.fullName);
+    console.log("Email " + ":", obj.email);
+    console.log("Phone " + ":", obj.phone);
+    console.log("Age " + ":", obj.age);
+  });
+} else {
+  console.log("No array found in local storage with the specified key.");
+}
