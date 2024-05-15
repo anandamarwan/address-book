@@ -1,62 +1,114 @@
-// // Retrieve the object from local storage
-// const storedObject = localStorage.getItem("address-book");
+const contactContainerElement = document.getElementById("contact-container");
 
-// // Check if the object exists in local storage
-// if (storedObject) {
-//   // Parse the stored JSON string into an object
-//   const parsedObject = JSON.parse(storedObject);
+function getCurrentContactId() {
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+  const id = Number(params.get("id"));
 
-//   // Now you can use the parsedObject
-//   console.log(parsedObject);
-// } else {
-//   console.log("No object found in local storage with the specified key.");
-// }
-
-// const contactItems = storedObject.join("");
-// parsedObject.innerHTML = contactItems;
-
-// Function to display data by ID
-function displayDataById(id) {
-  // Retrieve the array from local storage
-  var storedArray = localStorage.getItem("address-book");
-
-  // Check if the array exists in local storage
-  if (storedArray) {
-    // Parse the stored JSON string into an array of objects
-    var parsedArray = JSON.parse(storedArray);
-
-    // Find the object with the specified ID
-    var obj = parsedArray.find((item) => item.id === id);
-
-    // Get the container element where you want to display the data
-    var container = document.getElementById("data-container");
-
-    // Clear the container
-    container.innerHTML = "";
-
-    if (obj) {
-      var div = document.createElement("div");
-
-      div.innerHTML =
-        "Full Name: " +
-        obj.fullName +
-        "<br>" +
-        "Email: " +
-        obj.email +
-        "<br>" +
-        "Phone: " +
-        obj.phone +
-        "<br>" +
-        "Age: " +
-        obj.age;
-
-      container.appendChild(div);
-    } else {
-      container.innerHTML = "No data found with the specified ID.";
-    }
-  } else {
-    console.log("No array found in local storage with the specified key.");
-  }
+  return id;
 }
 
-displayDataById(4);
+function renderContactById() {
+  const id = getCurrentContactId();
+  const contact = loadContactById(id);
+
+  if (!contact) {
+    contactContainerElement.innerHTML = "<p>Contact not found</p>";
+    return;
+  }
+
+  contactContainerElement.innerHTML = `
+<h2>${contact.fullName}</h2>
+<p>${contact.email}</p>
+<p>${contact.phone}</p>
+<p>${contact.age}</p>
+<div>
+  <button onclick="renderEditContactFormById(${contact.id})">Edit</button>
+  <button onclick="deleteContactById(${contact.id})">Delete</button>
+</div>
+  `;
+}
+
+function renderEditContactFormById(id) {
+  const contact = loadContactById(id);
+
+  contactContainerElement.innerHTML = `
+<form id="edit-contact-form" method="post">
+  <div>
+    <label for="full-name">Full name:</label>
+    <input
+      id="full-name"
+      name="fullName"
+      type="text"
+      placeholder="Elon Musk"
+      value="${contact.fullName}"
+    />
+  </div>
+  <div>
+    <label for="email">Email address:</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      placeholder="elon@elon.com"
+      value="${contact.email}"
+    />
+  </div>
+  <div>
+    <label for="phone">Phone number:</label>
+    <input id="phone" name="phone" type="phone" placeholder="+1234567890"
+    value="${contact.phone}"
+    />
+  </div>
+  <div>
+    <label for="age">Age:</label>
+    <input id="age" name="age" type="number" placeholder="30"
+    value="${contact.age}" />
+  </div>
+  <button type="submit">Save</button>
+</form>`;
+
+  const editContactFormElement = document.getElementById("edit-contact-form");
+
+  editContactFormElement.addEventListener("submit", editContact);
+}
+
+function editContact(event) {
+  event.preventDefault();
+  const contactFormData = new FormData(event.target);
+
+  const contacts = loadContacts();
+
+  const newContact = {
+    id: getCurrentContactId(),
+    fullName: contactFormData.get("fullName"),
+    email: contactFormData.get("email"),
+    phone: contactFormData.get("phone"),
+    age: Number(contactFormData.get("age")),
+  };
+
+  // Update by using map, to find by id, not adding a new one
+  const updatedContacts = contacts.map((contact) => {
+    if (contact.id === newContact.id) {
+      return newContact;
+    } else {
+      return contact;
+    }
+  });
+
+  saveContacts(updatedContacts);
+  renderContactById();
+}
+
+function deleteContactById(id) {
+  const contacts = loadContacts();
+
+  const updatedContacts = contacts.filter(
+    (contact) => contact.id !== Number(id)
+  );
+
+  saveContacts(updatedContacts);
+  window.location.replace("/");
+}
+
+window.addEventListener("load", renderContactById);
