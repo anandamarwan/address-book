@@ -40,7 +40,7 @@ function renderEditContactFormById(id) {
       id="full-name"
       name="fullName"
       type="text"
-      placeholder="Elon Musk"
+      placeholder="Ananda Marwan"
       value="${contact.fullName}"
     />
   </div>
@@ -50,19 +50,19 @@ function renderEditContactFormById(id) {
       id="email"
       name="email"
       type="email"
-      placeholder="elon@elon.com"
+      placeholder="ananda@gmail.com"
       value="${contact.email}"
     />
   </div>
   <div>
     <label for="phone">Phone number:</label>
-    <input id="phone" name="phone" type="phone" placeholder="+1234567890"
+    <input id="phone" name="phone" type="phone" placeholder="+62 813 7103 2245"
     value="${contact.phone}"
     />
   </div>
   <div>
     <label for="age">Age:</label>
-    <input id="age" name="age" type="number" placeholder="30"
+    <input id="age" name="age" type="number" placeholder="24"
     value="${contact.age}" />
   </div>
   <button type="submit">Save</button>
