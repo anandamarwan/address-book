@@ -2,10 +2,15 @@ const contactContainerElement = document.getElementById("contact-container");
 
 function getCurrentContactId() {
   const queryString = window.location.search;
+  loadContactById;
   const params = new URLSearchParams(queryString);
-  const id = Number(params.get("id"));
 
-  return id;
+  const paramId = params.get("id");
+  if (!paramId) {
+    window.location.href = "/";
+  }
+
+  return Number(paramId);
 }
 
 function renderContactById() {
@@ -18,14 +23,16 @@ function renderContactById() {
   }
 
   contactContainerElement.innerHTML = `
-<h2>${contact.fullName}</h2>
-<p>${contact.email}</p>
-<p>${contact.phone}</p>
-<p>${contact.age}</p>
-<div>
-  <button onclick="renderEditContactFormById(${contact.id})">Edit</button>
-  <button onclick="deleteContactById(${contact.id})">Delete</button>
-</div>
+<section>
+  <h2>${contact.fullName}</h2>
+  <p>${contact.email}</p>
+  <p>${contact.phone}</p>
+  <p>${contact.age}</p>
+  <div>
+    <button onclick="renderEditContactFormById(${contact.id})">Edit</button>
+    <button onclick="deleteContactById(${contact.id})">Delete</button>
+  </div>
+</section>
   `;
 }
 

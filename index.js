@@ -23,8 +23,9 @@ function renderContacts() {
     ? searchContacts(contacts, keyword)
     : contacts;
 
-  const contactItemElements = contactsToRender.map(
-    (contact) => `<li>
+  contactsContainerElement.innerHTML = contactsToRender
+    .map(
+      (contact) => `<li>
   <a href="/contact/?id=${contact.id}">
     <h2>${contact.fullName}</h2>
     <p>${contact.email}</p>
@@ -36,10 +37,8 @@ function renderContacts() {
   </div>
 </li>
 `
-  );
-
-  const contactItems = contactItemElements.join("");
-  contactsContainerElement.innerHTML = contactItems;
+    )
+    .join("");
 }
 
 function addContact(event) {
